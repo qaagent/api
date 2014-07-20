@@ -1,5 +1,5 @@
 var identifier = "qaagent-ide";
-var CONTENTSCRIPT = 'C_S';
+var CONTENTSCRIPT = 'C_S';     
 
 function ExtAPI(id, settings, callback) {
 
