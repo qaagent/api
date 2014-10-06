@@ -1,24 +1,33 @@
 var identifier = "qaagent-ide";
-var CONTENTSCRIPT = 'C_S';     
+var CONTENTSCRIPT = 'C_S';
 
-function ExtAPI(id, settings, callback) {
+function ExtAPI(settings, callback) {
 
     //To enable plugin in your page add <div id="qaagent-ide" style="display: none;"></div> somewhere in the body
     var version;
-    element = document.getElementById(identifier);
 
-    if (element != "undefined" &&
-        element != null &&
-        element.id.length > 0 &&
-        element.innerHTML.length > 0) {
-        version = element.innerHTML;
-    } else {
-        alert("Please load the chrome extension first! For more details check this out ");
-        var answer = confirm("Please load the chrome extension first.")
-        if (answer) {
-            window.location = "https://developer.chrome.com/extensions/getstarted#unpacked";
+    _verifyIsPluginInstalled();
+
+    function _verifyIsPluginInstalled() {
+        element = document.getElementById(identifier);
+
+        if (element != "undefined" &&
+            element != null &&
+            element.id.length > 0 &&
+            element.innerHTML.length > 0) {
+            version = element.innerHTML;
+        } else {
+            alert("Please load the chrome extension first! For more details check this out ");
+            var answer = confirm("Please load the chrome extension first.")
+            if (answer) {
+                window.location = "https://developer.chrome.com/extensions/getstarted#unpacked";
+            }
         }
+    }
 
+    this.getPluginVersion = function()
+    {
+        return version;
     }
 
 
@@ -60,7 +69,7 @@ function ExtAPI(id, settings, callback) {
 
         if (_validateRxMsg(msg)) {
 
-            _parse(msg)
+            _parse(msg);
 
             //Pass message to the web page
             callback(msg);
@@ -71,7 +80,7 @@ function ExtAPI(id, settings, callback) {
     //API functions
 
     // Send message to the content script
-    this.execute = function(command, action, text) {
+    this.execute = function(id, command, action, text) {
 
         //Message to be sent to content script
         var message = {
@@ -91,19 +100,19 @@ function ExtAPI(id, settings, callback) {
         window.postMessage(message, "*");
     }
 
-    this.open = function(url) {
+    this.open = function(id, url) {
 
-        this.execute("open", url, "Open " + url);
+        this.execute(id, "open", url, "Open " + url);
     }
 
-    this.end = function() {
+    this.end = function(id) {
 
-        this.execute("end", "end", "end");
+        this.execute(id, "end", "end", "end");
     }
 
-    this.waitBrowserReady = function() {
+    this.waitBrowserReady = function(id) {
 
-        this.execute("waitBrowserReady", "*", "Wait browser");
+        this.execute(id, "waitBrowserReady", "*", "Wait browser");
     }
 
     return this;
