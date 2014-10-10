@@ -9,7 +9,7 @@ define(function(require) {
 
     messagingModule.addEventListener(a);
 
-    messagingModule.process(1, "open", "http://abv.bg", "Open url");
+//    messagingModule.process(1, "open", "http://abv.bg", "Open url");
 
 
 });
