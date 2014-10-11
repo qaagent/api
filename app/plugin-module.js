@@ -26,7 +26,7 @@ define(function() {
             },
 
             getVersion: function() {
-                
+
                 return version;
             }
         }

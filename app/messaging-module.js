@@ -1,24 +1,24 @@
-define(function() {
+define(function () {
 
     var settings = {};
 
     return {
 
-        setSettings: function(settings) {
+        setSettings: function (settings) {
 
             this.settings = settings;
         },
 
-        validate: function(message) {
+        validate: function (message) {
 
-            return typeof(message.to) !== "undefined" && typeof(TAG) !== "undefined" && message.to === TAG;
+            return typeof (message.to) !== "undefined" && typeof (TAG) !== "undefined" && message.to === TAG;
         },
 
-        addEventListener: function(callback) {
+        addEventListener: function (callback) {
 
             var that = this;
 
-            window.addEventListener("message", function(event) {
+            window.addEventListener("message", function (event) {
                 // We only accept messages from ourselves
                 // Since there is a lot of communication in this chanel (this is the main messaging channel of the browser itself)
                 // we need to filter all incoming messages based on several conditions. We just discard messages that are not for us.
@@ -32,6 +32,7 @@ define(function() {
                 if (that.validate(msg)) {
 
                     that.parse(msg);
+                
 
                     //Pass message to the web page
                     callback(msg);
@@ -41,7 +42,7 @@ define(function() {
         },
 
         //Parse all message attributes and their values
-        parse: function(message) {
+        parse: function (message) {
             //Message content which will be logged into browser console
             var messageInfo = "IDE ";
 
@@ -59,7 +60,13 @@ define(function() {
             console.log(messageInfo);
         },
 
-        process: function(id, command, action, text) {
+        waitProcessed: function(ms) {
+            ms += new Date().getTime();
+            while (new Date() < ms) {
+            }
+        },
+
+        process: function (id, command, action, text) {
 
             //Message to be sent to content script
             var message = {
@@ -69,7 +76,7 @@ define(function() {
                 action: action,
                 text: text,
                 tcid: id,
-                settings: settings
+                settings: this.settings
             };
 
             //Show message structure in the browser console
@@ -77,6 +84,7 @@ define(function() {
 
             //Post message go the content script
             window.postMessage(message, "*");
+
         }
     };
 
